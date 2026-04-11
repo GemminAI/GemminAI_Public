@@ -1,100 +1,61 @@
-# GemminAI | Deterministic Geopolitical Intelligence Engine
+# GemminAI — Public Repository
 
-> **Current Integrity Status: 49/49 PASS** > All analytical layers are cryptographically signed and verified via JCS (JSON Canonicalization Schema).
-
-## 1. Positioning
-
-GemminAI is a **deterministic geopolitical intelligence engine**. Determinism is achieved through canonicalized JSON serialization, fixed-weight scoring functions, and cryptographic signatures. Unlike standard LLM implementations, GemminAI transforms volatile OSINT data into verifiable, multi-perspective intelligence artifacts.
-
-### Key Functional Pillars
-
-- **Structured OSINT Ingestion**: Automated harvesting of high-signal geopolitical data.
-    
-- **Multi-model Delta Variance Analysis**: Cross-referencing independent LLM architectures (Gemini, Claude, GPT) to identify narrative outliers.
-    
-- **Canonicalized Output**: Standardization of JSON structures using **JCS (RFC 8785)** to ensure bit-perfect reproducibility.
-    
-- **Cryptographic Integrity Verification**: Every analytical artifact is hashed and signed using industry-standard curves.
-    
-- **Temporal Drift Detection**: Drift is computed across consecutive snapshots captured three times daily from live OSINT feeds.
-    
+**Gemmina Intelligence LLC**  
+[gemminai.com](https://gemminai.com) · [acta-aiie.org](https://acta-aiie.org) · [@jpGemminai](https://x.com/jpGemminai)
 
 ---
 
-## 2. Core Concepts
+## What is GemminAI?
 
-### Conflict Fragility Index (CFI)
+GemminAI is a geopolitical intelligence platform that applies **Narrative Physics** — a mathematically formalized framework for measuring how stories propagate, stabilize, and diverge across regions and time.
 
-CFI quantifies the tension between competing global narratives.
-
-$$CFI = \text{mean}(\text{variance across WEST / GLOBAL / EAST lenses})$$
-
-### Narrative Drift
-
-Drift measures the instability and evolution of a specific topic over a temporal axis.
-
-$$\text{Drift} = w_1\Delta CFI + w_2\text{SemanticShift} + w_3\text{ModelVariance}$$
+Every narrative state is assigned a deterministic identifier (**T25 state_hash**) via JSON Canonicalization Scheme (RFC 8785) + SHA-256, making all analytical outputs independently verifiable.
 
 ---
 
-## 3. Deterministic Integrity Layer
+## This Repository
 
-To ensure that intelligence artifacts remain untampered, GemminAI implements a strict security pipeline:
+This repository contains the **publicly verifiable layer** of the GemminAI system:
 
-1. **JSON Canonicalization (JCS)**: Eliminates non-deterministic formatting (RFC 8785).
-    
-2. **SHA-256 Hashing**: Generates a unique digital fingerprint of the data.
-    
-3. **ECDSA (P-256) Digital Signatures**: Provides non-repudiation of the source.
-    
-4. **Integrity Seal**: If a single bit mismatches, the engine refuses to render the content.
-    
-
----
-
-## 4. Architecture
 ```
-OSINT Data Source → Harvester → Structured Schema (JSON)
-                         ↓
-             Delta Variance Analysis (Multi-Model) → Global Synthesis
-                         ↓
-             Canonicalization (JCS) → SHA-256 Hash
-                         ↓
-              ECDSA (P-256) Signature → UI / API Output
+scripts/
+  benchmark_v2.py       — Evidence generation script (NQ 2.0.1)
+  measurement_plan.md   — Computational measurement specification
+RELEASE_NOTES.md        — System update history
 ```
 
----
-## 5. Verification & Reproducibility
+### scripts/benchmark_v2.py
 
-To ensure the system itself has not been tampered with, we provide the **Official Implementation Hash** for the core verification script.
+A self-contained benchmarking script that reproduces the empirical claims in the companion paper *Narrative Quantification 2.0.1*:
 
-### Official Implementation Hash (v1.0.0)
-|**Component**|**SHA-256 Hash**|
-|---|---|
-|`src/verify_integrity.py`|`3a5a3a9d1b13367621b5b34cc25a0d886a7da39ef91015a3f757ae37908602b8`|
-
-To verify the system integrity:
-```
-shasum -a 256 src/verify_integrity.py
-```
-
-**To reproduce and verify the artifacts:**
-
-1. **Run Harvester**: Fetch raw data from defined OSINT feeds.
-    
-2. **Generate Structured Artifact**: Pass data through the multi-model analysis pipeline.
-    
-3. **Canonicalize JSON**: Normalize the output using the JCS engine.
-    
-4. **Hash & Sign**: Generate the SHA-256 hash and apply the ECDSA signature.
-    
-5. **Verify**: Use the public key to confirm the artifact has not been tampered with
+- **V1**: Ablation study of the temperature function T(H) = 0.1 + 0.9H
+- **V2**: SIV transition matrix predictive accuracy (JP→US narrative propagation)
+- **V3**: Hazard function λ(t) estimation + AIC/BIC model comparison (Exponential / Weibull / Log-Normal)
+- **F4**: Entropy comparison between structurally paired and random narrative states
 
 ---
-## 6. Vision
 
-This project demonstrates how structured intelligence artifacts can be made **reproducible, verifiable, and temporally analyzable**. By bridging the gap between Large Language Models and cryptographic security, GemminAI establishes a new standard for "Digital Acta Diurna" — where truth is protected by mathematics.
+## Companion Paper
 
-© 2026 Gemmina Intelligence LLC.
+**Narrative Quantification 2.0: A Framework for the Observability of Reasoning Dynamics in Structured State Spaces**
+
+→ [acta-aiie.org](https://acta-aiie.org)
 
 ---
+
+## Protocol Specification
+
+The **Acta AIIE Protocol** — the constitutional document governing all GemminAI state representations — is maintained at:
+
+→ [github.com/GemminAI/Acta-AIIE](https://github.com/GemminAI/Acta-AIIE)
+
+---
+
+## Data
+
+The full dataset (9,378 narrative instances / 1,563 events) is not publicly distributed.  
+A sample (`data/sample_100.tsv`) is provided for reproducibility verification.
+
+---
+
+*Gemmina Intelligence LLC. — Crystallizing the noise of the world.*
