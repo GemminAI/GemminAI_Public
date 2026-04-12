@@ -233,3 +233,54 @@ history -c
 
 *Gemmina Intelligence LLC. — Pure Information Laboratory*  
 *「データが来てから論文に書く。推測で埋めない。」*
+
+---
+
+## 7. CFI 2.0 定義と ScoreBreakdown 構造
+
+### 7.1 CFI 2.0 計算式
+
+Conflict Factuality Index（CFI）は、情報の物理的・論理的矛盾を定量化するペナルティスコアである。
+満点を `1.0` とし、矛盾の種類ごとにペナルティを減算する。
+
+$$\text{CFI} = 1.0 - \sum_{k} p_k \cdot w_k$$
+
+| ペナルティ種別 $k$ | 重み $w_k$ | 定義 |
+|---|---|---|
+| Temporal Anomaly | 0.30 | 時系列の矛盾（過去の事象を現在形で記述等） |
+| Spatial Anomaly | 0.25 | 地理的矛盾（発生地と関与国の不整合等） |
+| Metadata Anomaly | 0.20 | 情報源・著者・日付の不整合 |
+| Logical Contradiction | 0.15 | 同一文書内の論理的矛盾 |
+| Entity Mismatch | 0.10 | T04（object_entity）と本文記述の不一致 |
+
+### 7.2 ScoreBreakdown 構造
+
+```json
+{
+  "cfi_score": 0.85,
+  "score_breakdown": {
+    "temporal_anomaly":      
+  },
+  "raw_penalty_sum": 0.25,
+  "final_cfi": 0.75
+}
+```
+
+`final_cfi = max(0.0, 1.0 - raw_penalty_sum)`
+
+### 7.3 confidence / stability メタデータ
+
+| フィールド | 型 | 定義 |
+|---|---|---|
+| `confidence` | float [0,1] | T10 `epistemic_confidence` と同値。エビデンスの強度 |
+| `stability` | float [0,1] | `1.0 - informational_entropy`（T22）。情報の結晶化度 |
+| `is_retroactive` | bool | 過去事象の遡及分析フラグ（`time_frame` が `created_at` より30日以上前の場合 `true`） |
+
+### 7.4 T35 v2 における CFI の役割
+
+CFI は T35 v2 において斥力変数として機能する：
+
+$$w_i \propto P^{(i)} \cdot O^{(i)} \cdot H^{(i)} \cdot \exp(-0.1 \cdot T^{(i)}) \cdot \text{CFI}^{(i)}$$
+
+CFI が低い世界線は重みが小さくなり、Hard Collapse の対象から外れる。
+
