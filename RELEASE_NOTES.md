@@ -1,5 +1,45 @@
 # Release Notes — GemminAI
 
+## v1.3.0 — 2026-04-24
+
+**Codename: "Epistemic Engine"**  
+*SIV-driven reporter routing replaces string matching. Sovereign inference layer established.*
+
+### Epistemic Engine v6.0
+
+* Implemented `assign_reporter_by_siv()` — `argmax(|SIV|)` maps 6-dimensional Strategic Interest Vector to reporter deterministically
+* Replaced `CATEGORY_REPORTER` string-matching with SIV-based dynamic routing in `reporter_brain_fn`
+* `chief_editor` integrated into `reporter_brain_fn` — synthesizes top-10 articles across all categories
+* Model updated: `gemini-2.0-flash` (v1beta API compatible) confirmed as production model
+
+### Infrastructure
+
+* `narrative-generator` migrated from Cloud Functions (gen1) to pure Cloud Run (gunicorn)
+* Eliminated `functions_framework` annotation conflict — `run.googleapis.com/build-function-target` cleared via service recreation
+* OIDC authentication unified: `orchestrator.py` now injects `Authorization: Bearer` token via `gem0_auth_provider`
+* `narrative-generator` secured with `--no-allow-unauthenticated` + Cloud Run Invoker IAM
+* All secrets migrated to **Secret Manager** (`GEMINI_API_KEY`, `DB_PASSWORD`) — plaintext env vars eliminated
+* Cloud Scheduler registered: `reporter-brain-daily` fires daily at JST 23:00 (`asia-northeast1`)
+* `orchestrator.service` registered as systemd enabled — survives VM reboot
+
+### Pipeline
+
+* `gateway.py` rewritten: `narrative_articles` table replaced by `events` + `v31_states_core` JOIN
+* SIV reconstructed from `t09_siv_*` columns (6-column → dict) for downstream compatibility
+* `narrative-generator` URL updated to `narrative-generator-962210526512.asia-northeast1.run.app`
+* `orchestrator.py` dispatched 2 articles successfully post-fix (NIKKEI, TECHCRUNCH)
+
+### Data Quality
+
+* Batch-corrected 65 records with dict-string `title_ja` corruption (4/19–4/23 legacy bug)
+* Root cause: Python `str(dict)` serialization instead of value extraction — fixed in `generate_title_ja()`
+
+### Research
+
+* T35 Phase E branching confirmed live: `dv=0.568, coh=0.901, ent=0.699` observed in production logs
+* These values constitute real observational data for **Figure 7 (Kill Shot)** in the forthcoming paper
+
+
 ---
 
 ## v1.2.1 — 2026-04-11
