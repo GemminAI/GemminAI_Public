@@ -1,5 +1,50 @@
 # Release Notes — GemminAI
 
+## v1.3.1 — 2026-04-25
+
+**Codename: "Research Portal"**  
+*6-country narrative pipeline established. Empirical Kill Shot confirmed. Research Portal fully operational.*
+
+### 6-Country Narrative Pipeline
+
+* Added `/multi` endpoint to `narrative-generator` — generates JP/US/GB/CN/EU/QA narratives in a single request
+* Refactored `/multi` to 2-phase architecture: Gemini generation (all countries first) then bulk DB save (single connection)
+* Fixed MySQL connection timeout during long Gemini retry waits
+* `orchestrator.py` updated to dispatch via `/multi` — 6 countries per article
+* Phase 2 `max_output_tokens` increased 2048 to 4096 — `backbone_history` and `deep_dive` now fully generated
+* Added `isinstance(dict)` guard for Phase 1/2 JSON parsing — eliminates `list.get()` AttributeError
+
+### Research Portal (`gemminai.com/research`)
+
+* **Figure 7 tab added** — live empirical testbed wired to real DB metrics
+* `GET /api/v1/research/metrics` endpoint added (Laravel + Next.js BFF)
+* `EmpiricalTestbed.tsx` component connected to live API — real SIV, state_hash, today event count
+* `stats/route.ts` rewritten to fetch all-country narratives; `points3d` computed per country with real SIV
+* `sovereign/events/[id]/route.ts` — `normalize()` added to flatten nested narrative structure for SovereignPanel
+* `EventController@latest` rewritten — `narrative_articles` replaced by `v31_states_core` JOIN (eliminated 500 error)
+* All 5 tabs operational: Narrative Spectrometer, 3D Viewpoint Gap, Raw Data, Sovereign v3.1, Figure 7
+
+### Figure 7: Failure of the Independence Assumption (Kill Shot)
+
+* Empirical validation on GemminAI production dataset — 786 real SIV pairs + 5,000 IID simulations
+* Two-sided permutation test, n_perm=10,000
+* Variance reduction (Structured vs IID): **84.2%** — p < 0.0001 (variance and entropy both)
+* Published: `scripts/classical_baseline.py`, `data/results_classical.csv`, `figure7_classical_baseline.png`
+* Paper: *NQM 3.1 — Quantum-Formalism Narrative State Observation* (PDF, April 2026)
+
+### Infrastructure
+
+* `orchestrator.service` confirmed enabled (systemd) — survives VM reboot
+* Cloud Scheduler `reporter-brain-daily` confirmed firing at JST 23:00
+* `narrative-generator` revision 00015 deployed with 2-phase `/multi` architecture
+
+### Data Quality
+
+* Batch-corrected 2 records with `{'english': '...'}` key pattern in `title_ja`
+* Remaining 3 quota-exhausted records corrected after Gemini API daily reset
+
+---
+
 ## v1.3.0 — 2026-04-24
 
 **Codename: "Epistemic Engine"**  
